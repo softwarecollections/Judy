@@ -1,6 +1,6 @@
 Name:           Judy
 Version:        1.0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        General purpose dynamic array
 
 Group:          System Environment/Libraries
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Sat Dec 13 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-4
 - for Judy1 man page fix, patch Makefile.{am,in} instead of
   relying on autotools to regenerate the latter.
