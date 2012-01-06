@@ -1,6 +1,6 @@
 Name:		Judy
 Version:	1.0.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	General purpose dynamic array
 Group:		System Environment/Libraries
 License:	LGPLv2+
@@ -84,8 +84,11 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
-* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+* Fri Jan  6 2012 Paul Howarth <paul@city-fan.org> 1.0.5-3
+- rebuilt for gcc 4.7
+
+* Mon Feb  7 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> 1.0.5-2
+- rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Sun Jul 18 2010 Paul Howarth <paul@city-fan.org> 1.0.5-1
 - update to 1.0.5
