@@ -121,7 +121,7 @@ rm -rf %{buildroot}
   relying on autotools to regenerate the latter
 - add README.Fedora with upstream's license explanation
 
-* Thu Nov 30 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-3
+* Sun Nov 30 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-3
 - fix Judy1 man page symlinks
 - use valid tag License: LGPLv2+ confirmed with upstream
 - use version macro in Source0
