@@ -1,6 +1,6 @@
 Name:		Judy
 Version:	1.0.5
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	General purpose dynamic array
 Group:		System Environment/Libraries
 License:	LGPLv2+
@@ -12,7 +12,9 @@ Patch0:		Judy-1.0.4-test-shared.patch
 # The J1* man pages were incorrectly being symlinked to Judy, rather than Judy1
 # This patch corrects that; submitted upstream 2008/11/27
 Patch1:		Judy-1.0.4-fix-Judy1-mans.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Fix some code with undefined behavior, commented on and removed by gcc
+Patch2:		Judy-1.0.5-undefined-behavior.patch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 
 %description
 Judy is a C library that provides a state-of-the-art core technology
@@ -39,9 +41,11 @@ for developing applications that use the Judy library.
 %setup -q -n judy-%{version}
 %patch0 -p1 -b .test-shared
 %patch1 -p1 -b .fix-Judy1-mans
+%patch2 -p1 -b .behavior
 cp -p %{SOURCE1} .
 
 %build
+export CFLAGS="%{optflags} -fno-strict-aliasing -fno-tree-ccp -fno-tree-dominator-opts -fno-tree-copy-prop -fno-tree-vrp"
 %configure --disable-static
 make 
 #%{?_smp_mflags}
@@ -84,6 +88,12 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Tue Feb 18 2014 Paul Howarth <paul@city-fan.org> - 1.0.5-8
+- Fix some code with undefined behavior
+- Build with -fno-strict-aliasing
+- Disable various compiler tree optimizations that trigger reproducible
+  crashes in gtkwave without generating compiler warnings (#1064090)
+
 * Fri Aug 02 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -96,40 +106,40 @@ rm -rf %{buildroot}
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Fri Jan  6 2012 Paul Howarth <paul@city-fan.org> 1.0.5-3
-- rebuilt for gcc 4.7
+* Fri Jan  6 2012 Paul Howarth <paul@city-fan.org> - 1.0.5-3
+- Rebuilt for gcc 4.7
 
-* Mon Feb  7 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> 1.0.5-2
-- rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+* Mon Feb  7 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
-* Sun Jul 18 2010 Paul Howarth <paul@city-fan.org> 1.0.5-1
-- update to 1.0.5
-  - added proper clean targets to enable multiple builds
-  - added examples directory
-  - correctly detects 32/64-bit build environment
-  - allow explicit configure for 32/64-bit environment
-- cosmetic spec file clean-ups
+* Sun Jul 18 2010 Paul Howarth <paul@city-fan.org> - 1.0.5-1
+- Update to 1.0.5
+  - Added proper clean targets to enable multiple builds
+  - Added examples directory
+  - Correctly detects 32/64-bit build environment
+  - Allow explicit configure for 32/64-bit environment
+- Cosmetic spec file clean-ups
 
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> 1.0.4-6
-- rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
-* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> 1.0.4-5
-- rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Sat Dec 13 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-4
-- for Judy1 man page fix, patch Makefile.{am,in} instead of
+* Sat Dec 13 2008 Charles R. Anderson <cra@wpi.edu> - 1.0.4-4
+- For Judy1 man page fix, patch Makefile.{am,in} instead of
   relying on autotools to regenerate the latter
-- add README.Fedora with upstream's license explanation
+- Add README.Fedora with upstream's license explanation
 
-* Sun Nov 30 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-3
-- fix Judy1 man page symlinks
-- use valid tag License: LGPLv2+ confirmed with upstream
-- use version macro in Source0
-- remove Makefiles from installed doc tree
+* Sun Nov 30 2008 Charles R. Anderson <cra@wpi.edu> - 1.0.4-3
+- Fix Judy1 man page symlinks
+- Use valid tag License: LGPLv2+ confirmed with upstream
+- Use version macro in Source0
+- Remove Makefiles from installed doc tree
 
-* Thu Nov 27 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-2
-- patch tests to run with shared library
-- run tests in check section
+* Thu Nov 27 2008 Charles R. Anderson <cra@wpi.edu> - 1.0.4-2
+- Patch tests to run with shared library
+- Run tests in check section
 
-* Sun Oct 05 2008 Charles R. Anderson <cra@wpi.edu> 1.0.4-1
-- initial package for Fedora
+* Sun Oct 05 2008 Charles R. Anderson <cra@wpi.edu> - 1.0.4-1
+- Initial package for Fedora
