@@ -1,6 +1,9 @@
-Name:		Judy
+%{?scl:%scl_package Judy}
+%{!?scl:%global pkg_name %{name}}
+
+Name:		%{?scl_prefix}Judy
 Version:	1.0.5
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	General purpose dynamic array
 Group:		System Environment/Libraries
 License:	LGPLv2+
@@ -14,7 +17,6 @@ Patch0:		Judy-1.0.4-test-shared.patch
 Patch1:		Judy-1.0.4-fix-Judy1-mans.patch
 # Fix some code with undefined behavior, commented on and removed by gcc
 Patch2:		Judy-1.0.5-undefined-behavior.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 
 %description
 Judy is a C library that provides a state-of-the-art core technology
@@ -47,13 +49,12 @@ cp -p %{SOURCE1} .
 %build
 export CFLAGS="%{optflags} -fno-strict-aliasing -fno-tree-ccp -fno-tree-dominator-opts -fno-tree-copy-prop -fno-tree-vrp"
 %configure --disable-static
-make 
+make
 #%{?_smp_mflags}
 # fails to compile properly with parallel make:
 # http://sourceforge.net/tracker/index.php?func=detail&aid=2129019&group_id=55753&atid=478138
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 # get rid of static libs and libtool archives
 rm -f %{buildroot}%{_libdir}/*.{a,la}
@@ -68,16 +69,11 @@ cd test
 ./Checkit
 cd -
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README README.Fedora examples/
 %{_libdir}/libJudy.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %doc doc
 %{_includedir}/Judy.h
 %{_libdir}/libJudy.so
@@ -88,6 +84,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Jan 25 2015 Honza Horak <hhorak@redhat.com> - 1.0.5-11
+- Convert to SCL package
+
 * Fri Aug 15 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
