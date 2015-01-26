@@ -46,9 +46,13 @@ for developing applications that use the Judy library.
 %patch2 -p1 -b .behavior
 cp -p %{SOURCE1} .
 
+# make libtool able to handle soname in format sclname-1
+sed -i -r 's|(major=\.)(`expr)|\1$verstring_prefix\2|' ltmain.sh
+
 %build
 export CFLAGS="%{optflags} -fno-strict-aliasing -fno-tree-ccp -fno-tree-dominator-opts -fno-tree-copy-prop -fno-tree-vrp"
 %configure --disable-static
+%{?scl_prefix:export verstring_prefix="%{scl_prefix}"}
 make
 #%{?_smp_mflags}
 # fails to compile properly with parallel make:
