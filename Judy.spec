@@ -3,13 +3,13 @@
 
 Name:		%{?scl_prefix}Judy
 Version:	1.0.5
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	General purpose dynamic array
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://sourceforge.net/projects/judy/
 Source0:	http://downloads.sf.net/judy/Judy-%{version}.tar.gz
-Source1:	README.Fedora
+Source1:	README.distro
 # Make tests use shared instead of static libJudy
 Patch0:		Judy-1.0.4-test-shared.patch
 # The J1* man pages were incorrectly being symlinked to Judy, rather than Judy1
@@ -74,7 +74,7 @@ cd test
 cd -
 
 %files
-%doc AUTHORS ChangeLog COPYING README README.Fedora examples/
+%doc AUTHORS ChangeLog COPYING README README.distro examples/
 %{_libdir}/libJudy.so.*
 
 %files devel
@@ -88,6 +88,9 @@ cd -
 %postun -p /sbin/ldconfig
 
 %changelog
+* Tue Jan 27 2015 Honza Horak <hhorak@redhat.com> - 1.0.5-12
+- Rename README.Fedora to README.distro
+
 * Sun Jan 25 2015 Honza Horak <hhorak@redhat.com> - 1.0.5-11
 - Convert to SCL package
 
